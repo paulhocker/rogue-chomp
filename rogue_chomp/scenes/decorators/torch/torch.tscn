@@ -1,0 +1,62 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://rogue_chomp_assets/dungeon_tiles.png" type="Texture" id=1]
+
+[sub_resource type="Curve" id=1]
+
+min_value = 0.0
+max_value = 1.0
+bake_resolution = 100
+_data = [  ]
+
+[sub_resource type="CurveTexture" id=2]
+
+flags = 4
+width = 2048
+curve = SubResource( 1 )
+
+[node name="Torch" type="StaticBody2D" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="Sprite" type="Sprite" parent="." index="0"]
+
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 192, 128, 8, 24 )
+_sections_unfolded = [ "Region" ]
+
+[node name="Light2D" type="Light2D" parent="." index="1"]
+
+position = Vector2( 0, -8 )
+scale = Vector2( 2.75, 8 )
+enabled = true
+editor_only = false
+texture = SubResource( 2 )
+offset = Vector2( 0, 0 )
+texture_scale = 1.0
+color = Color( 1, 1, 1, 1 )
+energy = 1.0
+mode = 0
+range_height = 24.0
+range_z_min = -1024
+range_z_max = 1024
+range_layer_min = 0
+range_layer_max = 0
+range_item_cull_mask = 1
+shadow_enabled = false
+shadow_color = Color( 0, 0, 0, 0 )
+shadow_buffer_size = 2048
+shadow_gradient_length = 0.0
+shadow_filter = 0
+shadow_filter_smooth = 0.0
+shadow_item_cull_mask = 1
+_sections_unfolded = [ "Range" ]
+
+

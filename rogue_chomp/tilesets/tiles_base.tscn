@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://rogue_chomp_assets/spr_all5_4A2.png" type="Texture" id=1]
+
+[node name="TilesBase" type="Node2D"]
+
+scale = Vector2( 0.1875, 0.1875 )
+
+[node name="Tile001" type="Sprite" parent="." index="0"]
+
+position = Vector2( 106.667, 106.667 )
+scale = Vector2( 5.33333, 5.33333 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 22, 169, 20, 20 )
+_sections_unfolded = [ "Region" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Tile002" type="Sprite" parent="." index="1"]
+
+position = Vector2( 320, 106.667 )
+scale = Vector2( 5.33333, 5.33333 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 64, 148, 20, 20 )
+_sections_unfolded = [ "Region" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Tile003" type="Sprite" parent="." index="2"]
+
+position = Vector2( 533.333, 106.667 )
+scale = Vector2( 5.33333, 5.33333 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 337, 274, 20, 20 )
+_sections_unfolded = [ "Region" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+

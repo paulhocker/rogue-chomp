@@ -1,0 +1,34 @@
+
+# Schema Reference @ https://gitlab.com/godot-stuff/gs-project-manager/wikis/schema
+# Copyright 2018, SpockerDotNet LLC
+
+name: rogue-chomp
+path: .
+version: 0.0.1
+default_type: git
+godot:
+  version: 3.0.6
+project:
+  url: none
+  
+assets:
+
+  gut:
+    location: https://github.com/bitwes/Gut.git
+    active: false
+    includes:
+      - dir: addons
+      
+  gs-logger:
+    location: git@gitlab.com:godot-stuff/gs-logger.git
+    branch: develop
+    includes:
+      - dir: gs_logger
+
+pre_install:
+
+post_install:
+
+pre_build:
+
+post_build:
