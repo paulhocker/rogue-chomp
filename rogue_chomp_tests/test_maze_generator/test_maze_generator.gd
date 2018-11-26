@@ -33,6 +33,8 @@ func _draw():
 	if not path_points:
 		return
 		
+	print(path_points)
+		
 	var point_start = path_points[0]
 	var point_end = path_points[len(path_points) - 1]
 
@@ -55,16 +57,22 @@ func _process(delta):
 	if Input.is_action_just_pressed("game_next_map"):
 		_build()	
 		
+	var mouse_position = get_global_mouse_position()
+	var location = tilemap.world_to_map(mouse_position)
+	var cell = tilemap.get_cell(location.x, location.y)
+	var index = location.x + location.y * maze.width
+	var c = ""
+	if index >= 0 and index < len(maze.maze):
+		c = maze.maze[index]
+		
+	print("%s:%s:%s:%s:%s" % [mouse_position, location, cell, index, c])
+
 	if Input.is_action_just_pressed("game_drop_end_node"):
 		
-		var mouse_position = get_global_mouse_position()
-		var location = tilemap.world_to_map(mouse_position)
-		var cell = tilemap.get_cell(location.x, location.y)
-		print(mouse_position, location, cell)
-	
-		if cell == 0:
+		if c == ".":
 			var pos = tilemap.map_to_world(location) + Vector2(8, 8)
 			end_node.position = pos
+			start_node.position = character.position
 			character.set_end_point(location)
 			var debug_path = character.get_path_nodes()
 			

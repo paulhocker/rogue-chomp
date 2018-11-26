@@ -2,7 +2,7 @@
 
 [ext_resource path="res://rogue_chomp_tests/test_maze_generator/test_maze_generator.gd" type="Script" id=1]
 [ext_resource path="res://rogue_chomp/scenes/maze/maze.tscn" type="PackedScene" id=2]
-[ext_resource path="res://rogue_chomp/scenes/maze/grid_maze_renderer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://rogue_chomp/scenes/maze/game_maze_renderer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://rogue_chomp_tests/test_end_node.tscn" type="PackedScene" id=4]
 [ext_resource path="res://rogue_chomp_tests/test_start_node.tscn" type="PackedScene" id=5]
 [ext_resource path="res://rogue_chomp/scenes/character/character.tscn" type="PackedScene" id=6]

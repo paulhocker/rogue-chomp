@@ -23,8 +23,8 @@ Resources="*res://rogue_chomp/scripts/resources.gd"
 
 window/size/width=320
 window/size/height=480
-window/size/test_width=640
-window/size/test_height=960
+window/size/test_width=320
+window/size/test_height=480
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
 
