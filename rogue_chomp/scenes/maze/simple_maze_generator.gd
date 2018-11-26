@@ -1,7 +1,14 @@
-extends "../thing.gd"
+"""
+	Class: Generates a Simple Maze
+	
+	Remarks:
+		
+		Generates a Simple Maze that is
+		Mirrored Horizontally.
+		
+"""
 
-const maze_wall = '|'
-const maze_floor = '.'
+extends "maze_generator.gd"
 
 var maze
 var tiles
@@ -12,23 +19,46 @@ var verbose = false
 var pos_list
 var connections
 
-func build():
-	Logger.trace('maze_builder:build')
-	var tt = _create()
-	maze = []
-	for y in range(h):
-		for x in range(w-2):
-			var i = x+(y*w)
-			maze.append(tt[i])
-		for x in range(w-2):
-			var i = (w-3-x)+(y*w)
-			maze.append(tt[i])
+func build(width, height, maze):
 	
-	print(maze)
-	return maze
+	Logger.trace('simple_maze_generator.build')
+	
+	if width & 1:
+		Logger.error("- width must cannot be odd number")
+		get_tree().quit()
+	
+	self.h = height
+	self.w = width / 2
+	
+	self.w += 2
+	
+	
+	if not maze:
+		self.tiles = []
+		# self.w = width
+		# self.h = height
+		for i in range(self.w * self.h):
+			self.tiles.append(maze_floor)
+	else:
+		self.set_map(self.w, self.h, maze)
+		
+	self.verbose = false
+	
+	
+	var tt = _create()
+	var m = []
+	for y in range(h):
+		for x in range(self.w - 2):
+			var i = x+(y*w)
+			m.append(tt[i])
+		for x in range(self.w - 2):
+			var i = (self.w-x-1)+(y*self.w-2)
+			m.append(tt[i])
+	
+	return m
 		
 func _create():
-	Logger.trace('maze_builder:_create')
+	Logger.trace('simple_maze_generator._create')
 	while add_wall_obstacle(null, null, true):
 		pass
 	return tiles
@@ -49,6 +79,7 @@ func any(iter):
 
 
 func format_map_string(tile_str, sep):
+	Logger.trace('simple_maze_generator.format_map_string')
 	var lines = tile_str.strip_edges().split('\n')
 	var sl = []
 	for line in lines:
@@ -62,21 +93,8 @@ func format_map_string(tile_str, sep):
 	return ret
 
 
-func __init__(w, h, tile_str=null):
-	
-	if not tile_str:
-		self.tiles = []
-		self.w = w
-		self.h = h
-		for i in range(w*h):
-			self.tiles.append(maze_floor)
-	else:
-		self.set_map(w, h, tile_str)
-		
-	self.verbose = false
-	
-	
 func set_map(w, h, tile_str):
+	Logger.trace('simple_maze_generator.set_map')
 	self.w = w
 	self.h = h
 	self.tiles = format_map_string(tile_str, "")
@@ -314,11 +332,9 @@ func random_choice(list):
 	
 	
 func _ready():
-	Logger.trace('maze_builder:_ready')
-	pass
+	Logger.trace('simple_maze_generator._ready')
 	
 	
 func _init():
-	Logger.trace('maze_builder:_init')
-	pass
+	Logger.trace('simple_maze_generator._init')
 	

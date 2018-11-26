@@ -1,11 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://rogue_chomp/tilesets/basic_floor_tiles.tres" type="TileSet" id=1]
 [ext_resource path="res://rogue_chomp/scenes/player/player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://rogue_chomp/scenes/ghosts/ghost.tscn" type="PackedScene" id=3]
-[ext_resource path="res://rogue_chomp/scenes/ghosts/green/green_ghost.tscn" type="PackedScene" id=4]
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Node2D" index="0"]
 
 [node name="Floor" type="TileMap" parent="." index="0"]
 
@@ -60,13 +59,5 @@ position = Vector2( 299.22, 72.6439 )
 [node name="Ghost2" parent="." index="4" instance=ExtResource( 3 )]
 
 position = Vector2( 219.997, 118.857 )
-
-[node name="Ghost3" parent="." index="5" instance=ExtResource( 4 )]
-
-position = Vector2( 157.519, 167.273 )
-
-[node name="Ghost4" parent="." index="6" instance=ExtResource( 4 )]
-
-position = Vector2( 196.533, 269.197 )
 
 

@@ -6,6 +6,9 @@
 [node name="Player" instance=ExtResource( 1 )]
 
 script = ExtResource( 2 )
-speed = 10
+
+[node name="Body" parent="Pivot" index="0"]
+
+region_rect = Rect2( 127, 85, 20, 20 )
 
 

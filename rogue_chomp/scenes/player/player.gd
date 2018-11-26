@@ -1,2 +1,2 @@
-extends "../character/character.gd"
+extends KinematicBody2D
 

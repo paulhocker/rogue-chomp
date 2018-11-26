@@ -43,6 +43,6 @@ func _get_id():
 
 
 func _init():
-	Logger.trace("thing:_init")
+	Logger.trace("thing._init")
 	id = UUID.new()
 

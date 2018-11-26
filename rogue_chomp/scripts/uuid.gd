@@ -47,7 +47,7 @@ func _create_uuid():
 #	GODOT
 	
 func _init():
-	Logger.trace("UUID:_init")
+	Logger.trace("UUID._init")
 	uuid = create()
 	
 	

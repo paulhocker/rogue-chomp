@@ -1,29 +1,150 @@
 extends KinematicBody2D
 
 #	size of grid in pixels
-export var grid_size = 8
+export var CELL_SIZE = 16
 
 #	my speed
-export var speed = 10
+export var SPEED = 10
 
-#	where we are
-var cur_pos	
+#	states
+enum {
+	STATE_NONE,
+	STATE_IDLE,
+	STATE_MOVING,
+	STATE_THINKING,
+	STATE_DEAD
+}
 
-#	where we are moving to
-var next_pos
+#	character current state
+var state = STATE_NONE
 
 #	where we need to be
 var target_pos
 
+#	ending point on the tilemap
+var end_point
 
+#	tilemap nodes we are moving to
+var nodes = []
+
+#	the maze
+var maze
+
+#	the tilemap
+var tilemap
+
+#	debug mode true/false
+var debug
+
+const BASE_LINE_WIDTH = 1.0
+const DRAW_COLOR = Color('#fff')
+var ARRIVE_DISTANCE = SPEED * 0.25
+var MASS = 10.0
+
+
+func on_path_ended():
+	Logger.trace("character.on_path_ended")
+	
+
+func on_path_point(point):
+	Logger.trace("character.on_path_point")
+	Logger.info("- point: %s" % [point])
+
+	
+func get_state():
+	var states = [
+		"None",
+		"Idle",
+		"Moving",
+		"Thinking",
+		"Dead"
+	]
+	
+	return states[state]
+	
+	
+func get_target_pos():
+	return "%s" % [target_pos]
+	
+	
+func get_path_nodes():
+	return nodes
+	
+	
+func set_maze(maze):
+	self.maze = maze
+
+
+func set_tilemap(tilemap):
+	self.tilemap = tilemap
+
+	
+#	jump to a point on the tilemap
+func jump_to_point(point):
+	Logger.trace("character.jump_to_point")
+	state = STATE_IDLE
+	position = tilemap.map_to_world(point) + (Vector2(1, 1) * (CELL_SIZE / 2.0))
+	set_end_point(point)
+
+	
+#	set the point to move to - recalculates path
+func set_end_point(point):
+	Logger.trace("character.set_end_point")
+	
+	state = STATE_IDLE
+	end_point = point
+	
+	_calculate_path()
+	
+	if not nodes or len(nodes) == 1:
+		return
+		
+	target_pos = Vector2(nodes[1].x, nodes[1].y) * CELL_SIZE + (Vector2(1, 1) * (CELL_SIZE / 2.0))
+	
+	state = STATE_MOVING
+
+	
+func _calculate_path():
+	Logger.trace("character._calculate_path")
+	
+	#	starting at our current position
+	var sp = tilemap.world_to_map(position)	
+	
+	#	if no end point - set to start point
+	if not end_point:
+		end_point = sp
+			
+	nodes = maze.get_path(sp, end_point)
+	
+	
 func _init():
-	pass
+	Logger.trace("character._init")
+	state = STATE_NONE
+	
 	
 func _process(delta):
-	position += Vector2(1,0) * speed * delta
 	
 	
+	match state:
 		
-func _move_to(pos):
-	next_pos = cur_pos
-	
+		STATE_IDLE:
+			pass
+			
+		STATE_MOVING:
+			var vel = (target_pos - position).normalized() * SPEED * delta
+			var dis = position.distance_to(target_pos) 
+			var arrived = dis < ARRIVE_DISTANCE
+			position += vel
+			
+			if arrived: 
+				nodes.remove(0)
+				
+				if len(nodes) == 0:
+					position = target_pos
+					state = STATE_IDLE
+					on_path_ended()
+					return
+				
+				on_path_point(nodes[0])	
+				target_pos = Vector2(nodes[0].x, nodes[0].y) * CELL_SIZE + (Vector2(1, 1) * (CELL_SIZE / 2.0))
+
