@@ -10,8 +10,10 @@ export var SPEED = 10
 enum {
 	STATE_NONE,
 	STATE_IDLE,
-	STATE_MOVING,
-	STATE_THINKING,
+	STATE_CHASE,
+	STATE_THINK,
+	STATE_SCATTER,
+	STATE_SCARED,
 	STATE_DEAD
 }
 
@@ -42,22 +44,74 @@ var ARRIVE_DISTANCE = SPEED * 0.25
 var MASS = 10.0
 
 
-func on_path_ended():
-	Logger.trace("character.on_path_ended")
+func on_idle():
+	pass
+		
+	
+func on_think():
+	change_state(STATE_IDLE)
+	if len(nodes) > 0:
+		change_state(STATE_CHASE)
+	
+	
+func on_chase():
+	var vel = (target_pos - position).normalized() * SPEED * get_process_delta_time()
+	var dis = position.distance_to(target_pos) 
+	var arrived = dis < ARRIVE_DISTANCE
+	position += vel
+	
+	if arrived: 
+		nodes.remove(0)
+		
+		if len(nodes) == 0:
+			position = target_pos
+			on_last_point()
+			return
+		
+		on_next_point(nodes[0])	
+		target_pos = Vector2(nodes[0].x, nodes[0].y) * CELL_SIZE + (Vector2(1, 1) * (CELL_SIZE / 2.0))
+
+		
+func on_dead():
+	change_state(STATE_NONE)
+
+
+func on_scatter():
+	change_state(STATE_IDLE)
 	
 
-func on_path_point(point):
-	Logger.trace("character.on_path_point")
+func on_scared():
+	change_state(STATE_IDLE)
+	
+	
+func on_last_point():
+	change_state(STATE_THINK)
+	
+
+func on_next_point(point):
 	Logger.info("- point: %s" % [point])
+	change_state(STATE_THINK)
 
+
+func change_state(state):
+	Logger.trace("character.change_state")
+	self.state = state
+	Logger.info("- state: %s" % [get_state_str()])
 	
+
 func get_state():
+	return state
+	
+			
+func get_state_str():
 	var states = [
-		"None",
-		"Idle",
-		"Moving",
-		"Thinking",
-		"Dead"
+		"none",
+		"idle",
+		"chase",
+		"think",
+		"scatter",
+		"scared",
+		"dead"
 	]
 	
 	return states[state]
@@ -90,18 +144,20 @@ func jump_to_point(point):
 #	set the point to move to - recalculates path
 func set_end_point(point):
 	Logger.trace("character.set_end_point")
+	Logger.info("point:%s" % [point])
 	
 	state = STATE_IDLE
 	end_point = point
 	
 	_calculate_path()
+	Logger.info("nodes: %s" % [nodes])
 	
 	if not nodes or len(nodes) == 1:
 		return
 		
 	target_pos = Vector2(nodes[1].x, nodes[1].y) * CELL_SIZE + (Vector2(1, 1) * (CELL_SIZE / 2.0))
 	
-	state = STATE_MOVING
+	state = STATE_CHASE
 
 	
 func _calculate_path():
@@ -111,7 +167,7 @@ func _calculate_path():
 	var sp = tilemap.world_to_map(position)	
 	
 	#	if no end point - set to start point
-	if not end_point:
+	if end_point == null:
 		end_point = sp
 			
 	nodes = maze.get_path(sp, end_point)
@@ -128,23 +184,16 @@ func _process(delta):
 	match state:
 		
 		STATE_IDLE:
-			pass
+			on_idle()
 			
-		STATE_MOVING:
-			var vel = (target_pos - position).normalized() * SPEED * delta
-			var dis = position.distance_to(target_pos) 
-			var arrived = dis < ARRIVE_DISTANCE
-			position += vel
-			
-			if arrived: 
-				nodes.remove(0)
-				
-				if len(nodes) == 0:
-					position = target_pos
-					state = STATE_IDLE
-					on_path_ended()
-					return
-				
-				on_path_point(nodes[0])	
-				target_pos = Vector2(nodes[0].x, nodes[0].y) * CELL_SIZE + (Vector2(1, 1) * (CELL_SIZE / 2.0))
+		STATE_CHASE:
+			on_chase()
 
+		STATE_THINK:
+			on_think()
+			
+		STATE_SCARED:
+			on_scared()
+			
+		STATE_SCATTER:
+			on_scatter()

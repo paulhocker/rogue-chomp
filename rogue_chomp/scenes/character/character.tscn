@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://rogue_chomp/scenes/character/character.gd" type="Script" id=1]
-[ext_resource path="res://rogue_chomp_assets/spr_all5_4A2.png" type="Texture" id=2]
+[ext_resource path="res://rogue_chomp_assets/pacman_deluxe.png" type="Texture" id=2]
 
 [sub_resource type="Animation" id=1]
 
@@ -10,10 +10,10 @@ length = 1.0
 loop = false
 step = 0.1
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="CircleShape2D" id=2]
 
 custom_solver_bias = 0.0
-extents = Vector2( 6.35232, 6.82121 )
+radius = 4.13057
 
 [node name="Character" type="KinematicBody2D"]
 
@@ -48,13 +48,15 @@ playback/speed = 1.0
 
 [node name="Body" type="Sprite" parent="Pivot" index="0"]
 
+scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
 region_enabled = true
-region_rect = Rect2( 169, 274, 20, 20 )
-_sections_unfolded = [ "Offset", "Region" ]
+region_rect = Rect2( 300, 450, 50, 50 )
+_sections_unfolded = [ "Offset", "Region", "Transform" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="3"]
 
 shape = SubResource( 2 )
+_sections_unfolded = [ "Transform" ]
 
 

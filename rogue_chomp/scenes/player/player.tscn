@@ -9,6 +9,6 @@ script = ExtResource( 2 )
 
 [node name="Body" parent="Pivot" index="0"]
 
-region_rect = Rect2( 127, 85, 20, 20 )
+region_rect = Rect2( 850, 50, 50, 50 )
 
 

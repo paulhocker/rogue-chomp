@@ -15,6 +15,7 @@ export (int) var height = 20
 export (Resource) var maze_generator
 export (Resource) var maze_renderer
 
+
 onready var astar = AStar.new()
 
 var maze
