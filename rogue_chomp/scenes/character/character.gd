@@ -32,9 +32,6 @@ var nodes = []
 #	the maze
 var maze
 
-#	the tilemap
-var tilemap
-
 #	debug mode true/false
 var debug
 
@@ -101,6 +98,10 @@ func change_state(state):
 	Logger.info("- state: %s" % [get_state_str()])
 	
 
+func get_end_point():
+	return end_point
+	
+	
 func get_state():
 	return state
 	
@@ -131,8 +132,8 @@ func set_maze(maze):
 	self.maze = maze
 
 
-func set_tilemap(tilemap):
-	self.tilemap = tilemap
+#func set_tilemap(tilemap):
+#	self.tilemap = tilemap
 
 	
 #	jump to a point on the tilemap
@@ -141,9 +142,16 @@ func jump_to_point(point):
 	state = STATE_IDLE
 	#position = tilemap.map_to_world(point) + (Vector2(1, 1) * (CELL_SIZE / 2.0))
 	position = _point_to_world(point)
-	set_end_point(point)
+#	set_end_point(point)
 
 	
+func _world_to_point(world_position):
+	Logger.trace("player._world_to_point")
+	var x = (world_position.x / CELL_SIZE)
+	var y = (world_position.y / CELL_SIZE)
+	var point = Vector2(x, y)
+	return point.floor()
+
 func _point_to_world(point):
 	Logger.trace("player._point_to_world")
 	if _is_floor(point):
@@ -161,41 +169,41 @@ func _get_cell_at_point(point):
 	Logger.trace("player._get_cell_at_point")
 	if point.x >= 0 and point.y >=0 and point.x < maze.width and point.y < maze.height:
 		var index = point.x + point.y * maze.width
-		var cell = maze.maze[index]
+		var cell = maze.tiles[index]
 		Logger.trace("point: %s index:%s cell:%s" % [point, index, cell])
 		return cell
 
 #	set the point to move to - recalculates path
-func set_end_point(point):
-	Logger.trace("character.set_end_point")
-	Logger.info("point:%s" % [point])
+func set_end_point(end_point):
+	Logger.trace("character.set_path_nodes")
+	Logger.info("end_point:%s" % [end_point])
 	
 	state = STATE_IDLE
-	end_point = point
+	self.end_point = end_point
 	
-	_calculate_path()
-	Logger.info("nodes: %s" % [nodes])
+	var start_point = _world_to_point(position)
 	
+	nodes = _calculate_path(start_point, end_point)
+		
 	if not nodes or len(nodes) == 1:
 		return
 		
+	Logger.info("nodes: %s" % [nodes])
 	target_pos = Vector2(nodes[1].x, nodes[1].y) * CELL_SIZE + (Vector2(1, 1) * (CELL_SIZE / 2.0))
 	
 	state = STATE_CHASE
 
 	
-func _calculate_path():
+func _calculate_path(start_pos, end_pos):
 	Logger.trace("character._calculate_path")
 	
-	#	starting at our current position
-	var sp = tilemap.world_to_map(position)	
-	
 	#	if no end point - set to start point
-	if end_point == null:
-		end_point = sp
+	if end_pos == null:
+		end_pos = start_pos
 			
-	nodes = maze.get_path(sp, end_point)
-	
+	var nodes = maze.get_path(start_pos, end_pos)
+	return nodes
+
 
 func _ready():
 	Logger.trace("character._ready")

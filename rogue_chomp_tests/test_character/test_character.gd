@@ -5,6 +5,7 @@ onready var start_node = $TestStartNode
 onready var end_node = $TestEndNode
 onready var character = $Character
 onready var test_maze = $TestMazeGenerator
+onready var debug_text = $"CanvasLayer/VBoxContainer/$DEBUG"
 
 
 var tilemap
@@ -23,11 +24,11 @@ func _process(delta):
 	if not maze:
 		return
 	
-	$"CanvasLayer/VBoxContainer/$STATE".text = character.get_state_str()
-	$"CanvasLayer/VBoxContainer/$TARGET".text = character.get_target_pos()
-	
 	if Input.is_action_just_pressed("debug"):
 		debug = !debug
+	
+	if debug:
+		debug_text.text = "%s:%s:%s" % [character.get_state_str(), character.get_target_pos(), character.get_end_point()]
 	
 	var mouse_position = get_global_mouse_position()
 	var location = tilemap.world_to_map(mouse_position)
@@ -36,10 +37,8 @@ func _process(delta):
 	var index = -1
 	if location.x >=0 and location.y >=0 and location.x < maze.width and location.y < maze.height:	
 		index = location.x + location.y * maze.width
-		c = maze.maze[index]
+		c = maze.tiles[index]
 		
-	#print("%s:%s:%s:%s:%s" % [mouse_position, location, cell, index, c])
-
 	if Input.is_action_just_pressed("game_drop_end_node"):
 		
 		if c == ".":
@@ -85,6 +84,8 @@ func _ready():
 	end_node.position = pos
 	
 	character.set_maze(maze)
-	character.set_tilemap(tilemap)
+	#character.set_tilemap(tilemap)
 	character.jump_to_point(Vector2(0,0))
 	
+func _init():
+	Logger.set_logger_level(Logger.LEVEL_WARN)

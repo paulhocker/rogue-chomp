@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 
-export (int) var SPEED = 50
+export (int) var SPEED = 5
 
 enum {
 	STATE_NONE,
@@ -9,6 +9,8 @@ enum {
 	STATE_MOVING,
 	STATE_DEAD
 }
+
+var states = [ "none", "idle", "moving", "dead" ]
 
 
 const dir_left = Vector2(-1, 0)
@@ -32,6 +34,18 @@ var last_target
 var next_target
 var half_adjust
 
+func get_state_str():
+	return states[state]
+	
+	
+func get_target_position():
+	return target_pos
+	
+	
+func get_target_point():
+	return target_point
+	
+	
 func on_idle():
 	Logger.trace("player.on_idle")
 	
@@ -72,7 +86,7 @@ func on_idle():
 func on_moving():
 	Logger.trace("player.on_moving")
 	
-	var velocity = move_dir.normalized() * SPEED * get_process_delta_time()
+	var velocity = move_dir.normalized() * SPEED * 10 * get_process_delta_time()
 	#var velocity = (target_pos - position).normalized() * SPEED * get_process_delta_time()
 	position += velocity
 	
@@ -98,7 +112,7 @@ func on_none():
 	
 	
 func set_maze(maze):
-	self.maze = maze.maze
+	self.maze = maze
 	
 
 # move player to position on world 
@@ -177,7 +191,7 @@ func _get_cell_at_point(point):
 	Logger.trace("player._get_cell_at_point")
 	if point.x >= 0 and point.y >=0 and point.x < maze.width and point.y < maze.height:
 		var index = point.x + point.y * maze.width
-		var cell = maze.maze[index]
+		var cell = maze.tiles[index]
 		Logger.trace("point: %s index:%s cell:%s" % [point, index, cell])
 		return cell
 	
