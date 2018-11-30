@@ -16,10 +16,10 @@ export (Resource) var maze_generator
 export (Resource) var maze_renderer
 
 
-onready var astar = AStar.new()
+var astar
 
 var maze
-var renderer
+var renderer 
 var generator
 var map_size
 
@@ -88,6 +88,16 @@ func get_path(world_start, world_end):
 	_calculate_path()
 	return point_path
 	
+func set_generator(generator):
+	self.generator = generator
+	
+func set_renderer(renderer):
+	#if self.renderer:
+	#	remove_child(self.renderer)
+		
+	self.renderer = renderer
+	#add_child(self.renderer)
+	
 func get_open_tiles():
 	return walkable_cells
 	
@@ -152,8 +162,13 @@ func _calculate_path():
 func _ready():
 	Logger.trace("maze._ready")
 	
+	
+func _init():
+	Logger.trace("maze._init")
+	astar = AStar.new()
+	
 	if not maze_renderer:
-		renderer = Resources.ConsoleMazeRenderer.instance()
+		renderer = Resources.GridMazeRenderer.instance()
 	else:
 		renderer = maze_renderer.instance()
 
@@ -163,13 +178,9 @@ func _ready():
 		Logger.error("Invalid Renderer")
 		get_tree().quit()
 		
-		
 	if not maze_generator:
 		generator = Resources.SimpleMazeGenerator.new()
 	else:
 		generator = maze_generator.new()
 	
-	
-func _init():
-	Logger.trace("maze._init")
 	

@@ -2,13 +2,18 @@ extends Node2D
 
 onready var maze = $Maze
 
-var tilemap
+#var tilemap
 var debug = false
 
 const BASE_LINE_WIDTH = 1.0
 const DRAW_COLOR = Color('#fff')
 
-export (Vector2) var map_offset = Vector2(2, 3)
+export (Resource) var maze_generator
+export (Resource) var maze_renderer
+export (Vector2) var camera_offset = Vector2(0, 0)
+
+var renderer
+var generator
 
 
 func build():
@@ -39,16 +44,26 @@ func _process(delta):
 	
 	if Input.is_action_just_pressed("debug"):
 		debug = !debug
+		update()
 	
 	if Input.is_action_just_pressed("game_next_map"):
-		_build()	
-		
-	update()
+		_build()
+		update()	
 				
 		
 func _ready():
 	Logger.trace("test_maze_generator._ready")
-	get_node("Camera2D").position -= map_offset * 16
-	tilemap = get_tree().get_root().find_node("TileMap", true, false)
+	get_node("Camera2D").position -= camera_offset * 16
+	if maze_generator:
+		generator = maze_generator.new()
+		maze.set_generator(generator)
+	if maze_renderer:
+		renderer = maze_renderer.instance()
+		add_child(renderer)
+		maze.set_renderer(renderer)
 	_build()
+	
+
+func _init():
+	Logger.trace("test_maze_generator._init")
 	

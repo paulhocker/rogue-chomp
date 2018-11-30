@@ -8,6 +8,8 @@ var width
 var height
 var maze
 
+#export (Resource) var tileset
+
 
 """
 	Method: Render the Maze
@@ -28,3 +30,4 @@ func _get_tile_at_position(x, y):
 
 func _init():
 	Logger.trace('maze_renderer._init')
+	pass

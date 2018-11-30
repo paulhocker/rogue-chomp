@@ -38,6 +38,8 @@ var tilemap
 #	debug mode true/false
 var debug
 
+var half_adjust
+
 const BASE_LINE_WIDTH = 1.0
 const DRAW_COLOR = Color('#fff')
 var ARRIVE_DISTANCE = SPEED * 0.25
@@ -69,7 +71,7 @@ func on_chase():
 			return
 		
 		on_next_point(nodes[0])	
-		target_pos = Vector2(nodes[0].x, nodes[0].y) * CELL_SIZE + (Vector2(1, 1) * (CELL_SIZE / 2.0))
+		target_pos = Vector2(nodes[0].x, nodes[0].y) * CELL_SIZE + half_adjust
 
 		
 func on_dead():
@@ -137,10 +139,32 @@ func set_tilemap(tilemap):
 func jump_to_point(point):
 	Logger.trace("character.jump_to_point")
 	state = STATE_IDLE
-	position = tilemap.map_to_world(point) + (Vector2(1, 1) * (CELL_SIZE / 2.0))
+	#position = tilemap.map_to_world(point) + (Vector2(1, 1) * (CELL_SIZE / 2.0))
+	position = _point_to_world(point)
 	set_end_point(point)
 
 	
+func _point_to_world(point):
+	Logger.trace("player._point_to_world")
+	if _is_floor(point):
+		return point * CELL_SIZE + half_adjust
+	else:
+		return Vector2(0, 0) + half_adjust
+		
+func _is_floor(point):
+	Logger.trace("player._is_floor")
+	if _get_cell_at_point(point) == ".":
+		return true
+	return false
+	
+func _get_cell_at_point(point):
+	Logger.trace("player._get_cell_at_point")
+	if point.x >= 0 and point.y >=0 and point.x < maze.width and point.y < maze.height:
+		var index = point.x + point.y * maze.width
+		var cell = maze.maze[index]
+		Logger.trace("point: %s index:%s cell:%s" % [point, index, cell])
+		return cell
+
 #	set the point to move to - recalculates path
 func set_end_point(point):
 	Logger.trace("character.set_end_point")
@@ -172,6 +196,10 @@ func _calculate_path():
 			
 	nodes = maze.get_path(sp, end_point)
 	
+
+func _ready():
+	Logger.trace("character._ready")
+	half_adjust = Vector2(1, 1) * (CELL_SIZE / 2)
 	
 func _init():
 	Logger.trace("character._init")

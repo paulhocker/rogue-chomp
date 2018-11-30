@@ -1,14 +1,15 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://rogue_chomp_tests/test_maze_generator/test_maze_generator.gd" type="Script" id=1]
 [ext_resource path="res://rogue_chomp/scenes/maze/maze.tscn" type="PackedScene" id=2]
-[ext_resource path="res://rogue_chomp/scenes/maze/grid_maze_renderer.tscn" type="PackedScene" id=3]
 
 [node name="TestMazeGenerator" type="Node2D"]
 
 script = ExtResource( 1 )
 _sections_unfolded = [ "Transform" ]
-map_offset = Vector2( 3, 3 )
+maze_generator = null
+maze_renderer = null
+camera_offset = Vector2( 1, 1 )
 
 [node name="Camera2D" type="Camera2D" parent="." index="0"]
 
@@ -39,9 +40,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="Maze" parent="." index="1" instance=ExtResource( 2 )]
 
-_sections_unfolded = [ "Transform" ]
-width = 14
-height = 24
-maze_renderer = ExtResource( 3 )
+width = 16
+height = 22
 
 

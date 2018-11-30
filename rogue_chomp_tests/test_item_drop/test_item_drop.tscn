@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://rogue_chomp_tests/test_maze_generator/test_maze_generator.tscn" type="PackedScene" id=1]
+
+[node name="TestItemDrop" type="Node"]
+
+[node name="TestMazeGenerator" parent="." index="0" instance=ExtResource( 1 )]
+
+camera_offset = Vector2( 0, 0 )
+
+
