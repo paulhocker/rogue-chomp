@@ -18,19 +18,19 @@ export (Resource) var maze_renderer
 
 var astar
 
-var maze
+var tiles
 var renderer 
 var generator
-var map_size
+var maze_size
 
 var path_start_position
 var path_end_position
 
 var point_path = []
-var walkable_cells = []
+var walkable_tiles = []
 
 
-func build(width, height, maze):
+func build(width, height, tiles):
 	Logger.trace("maze.build")
 	"""
 		Function: Build Maze
@@ -57,7 +57,7 @@ func build(width, height, maze):
 	"""
 	randomize()
 	
-	self.maze = null
+	self.tiles = null
 		
 	if width:
 		self.width = width
@@ -65,20 +65,20 @@ func build(width, height, maze):
 	if height:
 		self.height = height
 		
-	if maze:
-		self.maze = maze
+	if tiles:
+		self.tiles = tiles
 		
-	map_size = Vector2(self.width, self.height)
+	maze_size = Vector2(self.width, self.height)
 		
-	self.maze = generator.build(self.width, self.height, self.maze)
+	self.tiles = generator.build(self.width, self.height, self.tiles)
 	
-	walkable_cells = _astar_add_cells()
-	_astar_connect_cells(walkable_cells)
+	walkable_tiles = _astar_add_cells()
+	_astar_connect_cells(walkable_tiles)
 	
 
 func render():
 	Logger.trace("maze.render")
-	renderer.render(width, height, maze)
+	renderer.render(self)
 	
 
 func get_path(world_start, world_end):
@@ -99,7 +99,7 @@ func set_renderer(renderer):
 	#add_child(self.renderer)
 	
 func get_open_tiles():
-	return walkable_cells
+	return walkable_tiles
 	
 func get_astar_points():
 	return astar.get_points()
@@ -118,7 +118,7 @@ func _astar_add_cells():
 		for x in range(width):
 			var point = Vector2(x, y)
 			var point_index = _calculate_point_index(point)
-			if maze[point_index] == "|":
+			if tiles[point_index] == "|":
 				continue
 			points_array.append(point)
 			astar.add_point(point_index, Vector3(point.x, point.y, 0))
@@ -147,11 +147,11 @@ func _astar_connect_cells(points):
 
 
 func _calculate_point_index(point):
-	return point.x + (point.y * map_size.x)
+	return point.x + (point.y * maze_size.x)
 
 
 func _is_outside_bounds(point):
-	return point.x < 0 or point.y < 0 or point.x >= map_size.x or point.y >= map_size.y
+	return point.x < 0 or point.y < 0 or point.x >= maze_size.x or point.y >= maze_size.y
 	
 	
 func _calculate_path():

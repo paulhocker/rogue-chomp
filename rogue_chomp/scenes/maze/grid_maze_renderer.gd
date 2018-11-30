@@ -2,9 +2,9 @@ extends "./maze_renderer.gd"
 
 var tilemap
 
-func render(width, height, maze):
+func render(maze):
 	 
-	.render(width, height, maze)
+	.render(maze)
 	
 	Logger.trace('grid_maze_renderer.render')
 		
@@ -29,7 +29,7 @@ func render(width, height, maze):
 	for y in range(height):
 		for x in range(width):
 			pos = Vector2(x, y)
-			if _get_tile_at_position(x, y) == ".":
+			if get_tile_at_position(x, y) == ".":
 				tilemap.set_cellv(pos, floor_tile)
 			else:
 				tilemap.set_cellv(pos, wall_tile)

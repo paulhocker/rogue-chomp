@@ -14,18 +14,18 @@ var maze
 """
 	Method: Render the Maze
 """
-func render(width, height, maze): 
+func render(maze): 
 	Logger.trace('maze_renderer.render')
-	self.width = width
-	self.height = height
+	self.width = maze.width
+	self.height = maze.height
 	self.maze = maze
 
-func _get_tile_index(x, y):
+func get_tile_index(x, y):
 	return x + (y * width)
 	
 	
-func _get_tile_at_position(x, y):
-	return maze[_get_tile_index(x, y)]
+func get_tile_at_position(x, y):
+	return maze.tiles[get_tile_index(x, y)]
 	
 
 func _init():

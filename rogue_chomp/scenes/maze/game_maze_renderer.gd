@@ -17,15 +17,13 @@ var floors = []
 
 
 
-func render(width, height, maze):
+func render(maze):
 	"""
 		Give a Width, Height and List of Data, draw
 		a Maze on a TileMap
 	"""
 	
-	self.maze = maze
-	self.width = width
-	self.height = height
+	.render(maze)
 	
 	var tile_set = tile_map.tile_set
 	
@@ -109,7 +107,7 @@ func has_floor_above(x, y):
 	if index < 0:
 		return false
 		
-	if maze[index] == '.':
+	if maze.tiles[index] == '.':
 		return true
 		
 	return false
@@ -118,10 +116,10 @@ func has_floor_below(x, y):
 	var index = get_tile_index(x, y)
 	index += width
 	
-	if index > maze.size():
+	if index > maze.tiles.size():
 		return false
 		
-	if maze[index] == '.':
+	if maze.tiles[index] == '.':
 		return true
 		
 	return false
@@ -133,7 +131,7 @@ func has_floor_left(x, y):
 	if index < 0:
 		return false
 		
-	if maze[index] == '.':
+	if maze.tiles[index] == '.':
 		return true
 		
 	return false
@@ -143,21 +141,14 @@ func has_floor_right(x, y):
 	var index = get_tile_index(x, y)
 	index += 1
 	
-	if index > maze.size():
+	if index > maze.tiles.size():
 		return false
 		
-	if maze[index] == '.':
+	if maze.tiles[index] == '.':
 		return true
 		
 	return false
 
-func get_tile_index(x, y):
-	return x + (y * width)
-	
-	
-func get_tile_at_position(x, y):
-	return maze[get_tile_index(x, y)]
-	
 func random_choice(list):
 	return list[randi()%list.size()]
 

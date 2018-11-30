@@ -13,14 +13,14 @@ const maze_wall = '|'
 const maze_floor = '.'
 
 
-func build(width, height, maze):
+func generate(maze):
 	"""
 		Method: Returns a Series of Characters Representing a Maze
 		
 		Remarks:
-		s
+			
 	"""
-	return maze
+	return null
 	
 	
 func _ready():
